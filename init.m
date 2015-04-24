@@ -22,7 +22,12 @@ for ii=1:nox
 end
 reg_mark6=6*ones(1,length(zox));                                  %%region mark in z direction, 6 for oxide
 
-z_final=[zox znloc zncoa];         
+z_final=[zox znloc zncoa]; %% the numerical grid along z direction
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% find the # of layers along z direction for the source
+Nz_Sr=sum(z_final<=tSr)-nox;
+
 reg_mark=[reg_mark6 reg_mark5];
 Nz=length(z_final);                                     %%node number in z direction
 for zzi=1:length(z_final)-1

@@ -1,3 +1,4 @@
+if flag_equ~=1
 figure(1)   %% the carrier density of the first sheet in the channel
 vis(:,1)=[Nodex]';      %% in m
 vis(:,2)=[Nodey]';      %% in m
@@ -18,7 +19,7 @@ vis(:,2)=[Nodey]';      %% in m
 %vis(:,3)=Fn_bias;
 vis(:,3)=J_tunneling;  %%Current Density at the first sheet at the beginning of the channel,column vector
 [xlin ylin J_tunneling2D]=pr(vis);    % xlin and ylin in m.
-
+end
 % figure(22)   %% Current Density at the first channel sheet
 % vis(:,1)=[Nodex]';      %% in m
 % vis(:,2)=[Nodey]';      %% in m
@@ -32,11 +33,13 @@ vis(:,3)=J_tunneling;  %%Current Density at the first sheet at the beginning of 
 % %vis(:,3)=Fn_bias;
 % vis(:,3)=-Jn_l;  %%Current Density at the last sheet at the beginning of the channel,column vector
 % [xlin ylin Jn_l2D]=pr(vis);    % xlin and ylin in m.
-figure(5)
-semilogy(Vg_plot,J_total,'r','linewidth',[2])
-xlabel('Vg (V)','fontsize',[20])
-ylabel('Jt (A/m^2)','fontsize',[20])
-set(gca,'linewidth',[2],'fontsize',[20])
+
+%%%% I-Vg characteristics
+% figure(5)
+% semilogy(Vg_plot,J_total,'r','linewidth',[2])
+% xlabel('Vg (V)','fontsize',[20])
+% ylabel('Jt (A/m^2)','fontsize',[20])
+% set(gca,'linewidth',[2],'fontsize',[20])
 
 % figure(11)
 % semilogy(Vg_plot,Jt,'r','linewidth',[2])
@@ -88,9 +91,9 @@ vis1(:,2)=z_plotz;      %% in m
 vis1(:,3)=Ec_plotz;  %%Potential
 [xlEcz ylEcz Ecz2D]=pr(vis1);    % xlin and ylin in m.
 
-figure(12)
-Ec_tilt=Ecz2D(1,ceil(500/200*50):ceil(500/200*150))';
-x_tilt=(0:length(Ec_tilt)-1)'*200/500*1;
-plot(x_tilt,Ec_tilt)
+% figure(12)
+% Ec_tilt=Ecz2D(1,ceil(500/200*50):ceil(500/200*150))';
+% x_tilt=(0:length(Ec_tilt)-1)'*200/500*1;
+% plot(x_tilt,Ec_tilt)
 
 
