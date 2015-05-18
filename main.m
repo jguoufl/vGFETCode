@@ -1,8 +1,10 @@
 %%%%%% solve the Graphene based Field Effect Transistor, 3D Poisson-DD
-%%%%%% Wenchao Chen, July 2012
+%%%%%% Computational Nanoelectronics Lab, UFL, from 2012
 %%%%%% DD solved in the thin film channel 
 %%%%%% Poisson: solved in the whole channel+oxide region+graphene region
 %%%%%% Poisson: charge exists in the channel region, graphene layer
+%% to extend to metal source with finite thickness, need to modify poisson 
+%%% and Tpath.m
 
 clc
 clear all
