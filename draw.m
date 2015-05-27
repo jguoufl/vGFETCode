@@ -67,8 +67,9 @@ set(gca,'linewidth',[2],'fontsize',[20])
 % set(gca,'linewidth',[2],'fontsize',[20])
 % axis([0,202,-0.5,1]);
 
-
-for ii_p=nox+1:Nz
+Nstart=nox+1;
+Nstart=1;
+for ii_p=Nstart:Nz
     Ec_p=Ec3D(ii_p,:,Ng_step+1,Nd_step+1)+phid;
     vis(:,1)=[Nodex]';      %% in m
     vis(:,2)=[Nodey]';      %% in m
@@ -76,9 +77,9 @@ for ii_p=nox+1:Nz
     [xlin ylin Ec2D]=prz(vis);
     Nx_plot=length(xlin);
     Ny_plot=length(ylin);
-    x_plotz(Nx_plot*(ii_p-nox-1)+1:Nx_plot*(ii_p-nox))=xlin;
-    z_plotz(Nx_plot*(ii_p-nox-1)+1:Nx_plot*(ii_p-nox))=z_final(ii_p);
-    Ec_plotz(Nx_plot*(ii_p-nox-1)+1:Nx_plot*(ii_p-nox))=Ec2D(ceil(Ny_plot/2),:);              %%at certain y
+    x_plotz(Nx_plot*(ii_p-Nstart)+1:Nx_plot*(ii_p-Nstart+1))=xlin;
+    z_plotz(Nx_plot*(ii_p-Nstart)+1:Nx_plot*(ii_p-Nstart+1))=z_final(ii_p);
+    Ec_plotz(Nx_plot*(ii_p-Nstart)+1:Nx_plot*(ii_p-Nstart+1))=Ec2D(ceil(Ny_plot/2),:);              %%at certain y
 end
 
 figure(10)   %% the potential profile in x-z plane
