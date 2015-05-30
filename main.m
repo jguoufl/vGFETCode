@@ -49,8 +49,8 @@ for ii_vg=1:(Ng_step+1)
         %%End of Boundary Conditions%%%%%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%% the initial guess as Laplace solution
-        [Ec_bias]=poisson(0,0,1,K3D,S3D,Bd3D,N2D,nox,Gnode1,Vs,sz1,sz2,phid);
-        
+        %[Ec_bias]=poisson(0,0,1,K3D,S3D,Bd3D,N2D,nox,Gnode1,Vs,sz1,sz2,phid);
+        Ec_bias=zeros(N3D,1); % initial guess
         % initial guess for Fn: linear drop over z position, in channel
         % region
         Fn_z=linspace(-Vs, -Vd_bias, Nz-nox-1);
