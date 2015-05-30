@@ -70,8 +70,13 @@ end
 % set(gca,'linewidth',[2],'fontsize',[20])
 % axis([0,202,-0.5,1]);
 
-
-for ii_p=nox+1:Nz
+oxide_only=0;  % visualize oxide only
+if oxide_only==1 
+    Nstart=nox+1;    
+else
+    Nstart=1;    
+end
+for ii_p=Nstart:Nz
     Ec_p=Ec3D(ii_p,:,Ng_step+1,Nd_step+1)+phid;
     vis(:,1)=[Nodex]';      %% in m
     vis(:,2)=[Nodey]';      %% in m
@@ -79,11 +84,11 @@ for ii_p=nox+1:Nz
     [xlin ylin Ec2D]=prz(vis);
     Nx_plot=length(xlin);
     Ny_plot=length(ylin);
-    x_plotz(Nx_plot*(ii_p-nox-1)+1:Nx_plot*(ii_p-nox))=xlin;
-    z_plotz(Nx_plot*(ii_p-nox-1)+1:Nx_plot*(ii_p-nox))=z_final(ii_p);
-    Ec_plotz(Nx_plot*(ii_p-nox-1)+1:Nx_plot*(ii_p-nox))=Ec2D(ceil(Ny_plot/2),:);              %%at certain y
+    x_plotz(Nx_plot*(ii_p-Nstart)+1:Nx_plot*(ii_p-Nstart+1))=xlin;
+    z_plotz(Nx_plot*(ii_p-Nstart)+1:Nx_plot*(ii_p-Nstart+1))=z_final(ii_p);
+    Ec_plotz(Nx_plot*(ii_p-Nstart)+1:Nx_plot*(ii_p-Nstart+1))=Ec2D(ceil(Ny_plot/2),:);              %%at certain y
 end
-
+clear vis1
 figure(10)   %% the potential profile in x-z plane
 vis1(:,1)=x_plotz;      %% in m
 vis1(:,2)=z_plotz;      %% in m
@@ -91,9 +96,9 @@ vis1(:,2)=z_plotz;      %% in m
 vis1(:,3)=Ec_plotz;  %%Potential
 [xlEcz ylEcz Ecz2D]=pr(vis1);    % xlin and ylin in m.
 
-% figure(12)
-% Ec_tilt=Ecz2D(1,ceil(500/200*50):ceil(500/200*150))';
-% x_tilt=(0:length(Ec_tilt)-1)'*200/500*1;
-% plot(x_tilt,Ec_tilt)
-
+Ny_cut= sum(ylEcz<0)+1;  % the y index of the graphene layer
+figure(12)
+Ec_tilt=Ecz2D(Ny_cut,ceil(500/200*50):ceil(500/200*150))';
+x_tilt=(0:length(Ec_tilt)-1)'*200/500*1;
+plot(x_tilt,Ec_tilt)
 

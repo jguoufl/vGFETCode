@@ -144,21 +144,26 @@ ind_s=1;
 %%%%%% construct the 3D S and K in a efficient way using sparse matrix
 %%%%%% construction
 for ii_z=1:Nz
-    if ii_z>nox
-        er=epso1;
+    if ii_z>nox  % semiconductor channel, a for smaller 1D elem, b for larger (upper)
+        era=epso1;
+        erb=epso1;
+    elseif ii_z==nox  % only at interface node era and erb are different
+        era=epsoins;  % lower element is oxide
+        erb=epso1;    % upper element is semicond. channel
     else
-        er=epsoins;
+        era=epsoins;
+        erb=epsoins;
     end
                        
-    if ii_z==1  
+    if ii_z==1  % gate electrode layer
         a=deltz(ii_z);
-        %%% the upper diagonal block
+        %%% the diagonal block
         S3Di(ind_s:(ind_s+ldiag-1))=Sdi+(ii_z-1)*N2D;
         S3Dj(ind_s:(ind_s+ldiag-1))=Sdj+(ii_z-1)*N2D;
         S3Dv(ind_s:(ind_s+ldiag-1))=a/3*Sdv;        
         K3Di(ind_s:(ind_s+ldiag-1))=Kdi+(ii_z-1)*N2D;
         K3Dj(ind_s:(ind_s+ldiag-1))=Kdj+(ii_z-1)*N2D;
-        K3Dv(ind_s:(ind_s+ldiag-1))=er*(a/3*Kdv+1/a*Sdv);
+        K3Dv(ind_s:(ind_s+ldiag-1))=era*(a/3*Kdv+1/a*Sdv);
         ind_s=ind_s+ldiag;
 
         %%% The upper off diagonal block
@@ -167,19 +172,10 @@ for ii_z=1:Nz
         S3Dv(ind_s:(ind_s+ldiag-1))=a/6*Sdv;
         K3Di(ind_s:(ind_s+ldiag-1))=Kdi+(ii_z-1)*N2D;
         K3Dj(ind_s:(ind_s+ldiag-1))=Kdj+ii_z*N2D;
-        K3Dv(ind_s:(ind_s+ldiag-1))=er*(a/6*Kdv-1/a*Sdv);
+        K3Dv(ind_s:(ind_s+ldiag-1))=era*(a/6*Kdv-1/a*Sdv);
         ind_s=ind_s+ldiag;
-        %%% The lower off diagonal block
-        S3Di(ind_s:(ind_s+ldiag-1))=Sdi+ii_z*N2D;
-        S3Dj(ind_s:(ind_s+ldiag-1))=Sdj+(ii_z-1)*N2D;
-        S3Dv(ind_s:(ind_s+ldiag-1))=a/6*Sdv;
-        K3Di(ind_s:(ind_s+ldiag-1))=Kdi+ii_z*N2D;
-        K3Dj(ind_s:(ind_s+ldiag-1))=Kdj+(ii_z-1)*N2D;
-        K3Dv(ind_s:(ind_s+ldiag-1))=er*(a/6*Kdv-1/a*Sdv);      
-        ind_s=ind_s+ldiag;
-        %%% increase the index
         
-    elseif ii_z==Nz
+    elseif ii_z==Nz   % drain electrode layer
         a=deltz(ii_z-1);
         %%% the diagonal block
         S3Di(ind_s:(ind_s+ldiag-1))=Sdi+(ii_z-1)*N2D;
@@ -187,10 +183,19 @@ for ii_z=1:Nz
         S3Dv(ind_s:(ind_s+ldiag-1))=a/3*Sdv;
         K3Di(ind_s:(ind_s+ldiag-1))=Kdi+(ii_z-1)*N2D;
         K3Dj(ind_s:(ind_s+ldiag-1))=Kdj+(ii_z-1)*N2D;
-        K3Dv(ind_s:(ind_s+ldiag-1))=er*(a/3*Kdv+1/a*Sdv);
+        K3Dv(ind_s:(ind_s+ldiag-1))=era*(a/3*Kdv+1/a*Sdv);
+        ind_s=ind_s+ldiag;
+        
+        %%% The lower off diagonal block
+        S3Di(ind_s:(ind_s+ldiag-1))=Sdi+(ii_z-1)*N2D;
+        S3Dj(ind_s:(ind_s+ldiag-1))=Sdj+(ii_z-2)*N2D;
+        S3Dv(ind_s:(ind_s+ldiag-1))=a/6*Sdv;
+        K3Di(ind_s:(ind_s+ldiag-1))=Kdi+(ii_z-1)*N2D;
+        K3Dj(ind_s:(ind_s+ldiag-1))=Kdj+(ii_z-2)*N2D;
+        K3Dv(ind_s:(ind_s+ldiag-1))=era*(a/6*Kdv-1/a*Sdv);      
         ind_s=ind_s+ldiag;
    
-    else
+    else   % oxide and channel layer
         a=deltz(ii_z-1);                                   %%seperation in the ii_z grid
         b=deltz(ii_z);                                     %%seperation in the next grid
         %%% the diagonal block
@@ -199,7 +204,7 @@ for ii_z=1:Nz
         S3Dv(ind_s:(ind_s+ldiag-1))=(a/3+b/3)*Sdv;        
         K3Di(ind_s:(ind_s+ldiag-1))=Kdi+(ii_z-1)*N2D;
         K3Dj(ind_s:(ind_s+ldiag-1))=Kdj+(ii_z-1)*N2D;
-        K3Dv(ind_s:(ind_s+ldiag-1))=er*((a/3+b/3)*Kdv+(1/a+1/b)*Sdv);
+        K3Dv(ind_s:(ind_s+ldiag-1))=(era*a/3+erb*b/3)*Kdv+(era/a+erb/b)*Sdv;
         ind_s=ind_s+ldiag;
 
         %%% The upper off diagonal block
@@ -208,16 +213,16 @@ for ii_z=1:Nz
         S3Dv(ind_s:(ind_s+ldiag-1))=b/6*Sdv;
         K3Di(ind_s:(ind_s+ldiag-1))=Kdi+(ii_z-1)*N2D;
         K3Dj(ind_s:(ind_s+ldiag-1))=Kdj+ii_z*N2D;
-        K3Dv(ind_s:(ind_s+ldiag-1))=er*(b/6*Kdv-1/b*Sdv);
+        K3Dv(ind_s:(ind_s+ldiag-1))=erb*(b/6*Kdv-1/b*Sdv);
         ind_s=ind_s+ldiag;
         
         %%% The lower off diagonal block
-        S3Di(ind_s:(ind_s+ldiag-1))=Sdi+ii_z*N2D;
-        S3Dj(ind_s:(ind_s+ldiag-1))=Sdj+(ii_z-1)*N2D;
-        S3Dv(ind_s:(ind_s+ldiag-1))=b/6*Sdv;
-        K3Di(ind_s:(ind_s+ldiag-1))=Kdi+ii_z*N2D;
-        K3Dj(ind_s:(ind_s+ldiag-1))=Kdj+(ii_z-1)*N2D;
-        K3Dv(ind_s:(ind_s+ldiag-1))=er*(b/6*Kdv-1/b*Sdv);  
+        S3Di(ind_s:(ind_s+ldiag-1))=Sdi+(ii_z-1)*N2D;
+        S3Dj(ind_s:(ind_s+ldiag-1))=Sdj+(ii_z-2)*N2D;
+        S3Dv(ind_s:(ind_s+ldiag-1))=a/6*Sdv;   % corrected by JG
+        K3Di(ind_s:(ind_s+ldiag-1))=Kdi+(ii_z-1)*N2D;
+        K3Dj(ind_s:(ind_s+ldiag-1))=Kdj+(ii_z-2)*N2D;
+        K3Dv(ind_s:(ind_s+ldiag-1))=era*(a/6*Kdv-1/a*Sdv);  % corrected by JG 
         ind_s=ind_s+ldiag; 
         %%% increase the index
               

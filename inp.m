@@ -21,11 +21,11 @@ flag_equ=1; % 1 for equilibrium electrostatics only
 tSr=10e-9;  % the thickness of the source contact, 0 thickness means one grid point thickness at z=0
 
 Vs=0;               % the source (Graphene) voltage
-Vg0=25;             % the bottom gate voltage
+Vg0=2;             % the bottom gate voltage
 Vg_step=5;
 Ng_step=0;
 
-Vd0=2;
+Vd0=1;
 Vd_step=0.5;
 Nd_step=0;          % the drain (the top electrode) voltage
 
