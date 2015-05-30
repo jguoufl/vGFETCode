@@ -94,8 +94,11 @@ vis1(:,3)=Ec_plotz;  %%Potential
 
 Ny_cut= sum(ylEcz<0)+1;  % the y index of the graphene layer
 figure(12)
-Ec_tilt=Ecz2D(Ny_cut,ceil(500/200*50):ceil(500/200*150))';
-x_tilt=(0:length(Ec_tilt)-1)'*200/500*1;
-plot(x_tilt,Ec_tilt)
+Ec_tilt=Ecz2D(Ny_cut,:)';
+plot((xlEcz-max(xlEcz)/2)*1e9,Ec_tilt,'linewidth',[2]);
+set(gca,'fontsize',[20],'linewidth',[2]);
+xlabel('X [nm]');
+ylabel('E [eV]');
+
 
 
