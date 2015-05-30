@@ -5,13 +5,12 @@ function [Ne_old,Fn_bias,Jn_f,I_f,Jn_l,I_l]=charge(U,Fn_bias_old,Ele,N2D,NodeA,d
 %%only channel region is considered, oxide and graphene sheet are excluded.
 
 global epso m0 kBT
-global hbar q Ne0
+global hbar q Ne0 mu
 
-mu=1e-4;
-U=U+phid;            %%vacuum level+schottky barrier at drain
 %%charge density for setting boundary conditions%%
 Nss=Ne0*fermi(-phi_gc./kBT,1,1/2);
 Ndd=Ne0*fermi(-phid/kBT,1,1/2);
+
 %%%%%%%%%%%%%%%End%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 N_n=length(U);      %% the total number of nodes, in channel region

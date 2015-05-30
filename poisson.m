@@ -18,7 +18,8 @@ function [Ec_bias]=poisson(Fn,Ec_old,Laplace_flag, K, S,Bc,N2D,nox,Gnode1,Vs,sz1
 %% Ne_bias: the charge density at equil. computed by
 %% Ne0*fermi((Fn-Ec)/kBT,1,1/2),
 global epso m0 kBT
-global hbar q Ne0
+global hbar q Ne0 Nd
+global phi_dirac
 
 vF=9.3e5;                      %%Fermi velocity of graphene  
 Ne_g=sparse(N2D,1);            %%charge density for graphene layer nodes
@@ -38,24 +39,22 @@ if Laplace_flag==1
 else
     error_inner=1; 
     criterion_inner=1e-3;
-    Ec_q=phid+Ec_old(ind_ch);         %%with respect to vacum level.
     while error_inner>criterion_inner
         dummy_ro=zeros(nu_tot,1); dummy_ro_prime=zeros(nu_tot,1);
         
         %%% compute the total charge density (electron as positive)
-        dummy_ro(ind_ch)=Ne0*fermi((Fn(ind_ch)-Ec_q)./kBT,1,1/2);                 %%for Channel region
-        
-        Ne_g(Gnode1)=q^2/(pi*hbar^2*vF^2)*sign(-Ec_old(ind_g)-Vs).*(-Vs-Ec_old(ind_g)).^2/(sz1/2+sz2/2);  %%graphene sheet,positive for eletron, negative for hole
+        dummy_ro(ind_ch)=Ne0*fermi((Fn(ind_ch)-Ec_old(ind_ch))./kBT,1,1/2);                 %%for Channel region
+        Edirac=Ec_old(ind_g)-phi_dirac;  % the Dirac point of graphene
+        Ne_g(Gnode1)=q^2/(pi*hbar^2*vF^2)*sign(-Vs-Edirac).*(-Vs-Edirac).^2/(sz1/2+sz2/2);  %%graphene sheet,positive for eletron, negative for hole
         dummy_ro(ind_g)=Ne_g(Gnode1);
         %%% compute the derivitive of the toatl charge density.
-        dummy_ro_prime(ind_ch)=-(Ne0/kBT)*fermi((Fn(ind_ch)-Ec_q)./kBT,1,-1/2);                    %%negative value
-        dummy_ro_prime(ind_g)=-abs(2*q^2/(pi*hbar^2*vF^2).*abs(-Vs-Ec_old(ind_g))/(sz1/2+sz2/2));  %%negative value, always
+        dummy_ro_prime(ind_ch)=-(Ne0/kBT)*fermi((Fn(ind_ch)-Ec_old(ind_ch))./kBT,1,-1/2);                    %%negative value
+        dummy_ro_prime(ind_g)=-abs(2*q^2/(pi*hbar^2*vF^2).*abs(-Vs-Edirac)/(sz1/2+sz2/2));  %%negative value, always
 
         %%%%% Newton-Ralphson solution
-        Res=K*Ec_old+(q/epso)*S*(dummy_ro)-Bc;
+        Res=K*Ec_old+(q/epso)*S*(dummy_ro-Nd)-Bc;
         Jm=K+(q/epso)*S*spdiags(dummy_ro_prime,0,nu_tot,nu_tot);
         delt_U=-sparse(Jm)\Res;
-
         %% bound delt_U to eliminate non-physical values
         for i_node=1:length(delt_U)
             if(abs(delt_U(i_node))<=1)

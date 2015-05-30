@@ -41,7 +41,6 @@ for ii_n=1:N2D
             Ec=Ec3D(nox+1:nloc+nox+1,ii_n);         %%%band profile in local mesh grid
             Fn=Fn3D(nox+1:Nz,ii_n); 
             Fn_end=Fn(length(Fn));                  %%%quasi fermi level at drain side
-            Ec=Ec+phid;
             phis=Ec(1);                             %%%shottky barrier height
             for ii_z=1:length(z)
                 if ii_z==1
