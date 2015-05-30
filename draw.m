@@ -74,7 +74,7 @@ else
     Nstart=1;    
 end
 for ii_p=Nstart:Nz
-    Ec_p=Ec3D(ii_p,:,Ng_step+1,Nd_step+1)+phid;
+    Ec_p=Ec3D(ii_p,:,Ng_step+1,Nd_step+1);
     vis(:,1)=[Nodex]';      %% in m
     vis(:,2)=[Nodey]';      %% in m
     vis(:,3)=Ec_p;
