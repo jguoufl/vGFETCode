@@ -16,7 +16,7 @@ Ne0=1e22;%2*(m0*kBT*q/(2*pi*hbar^2))^(3/2); %1e27; % the charge density constant
 mu=1.5e-4; %1.5e-4;            % m^2/Vs
 
 Vs=0;               % the source (Graphene) voltage
-Vg0=25;             % the bottom gate voltage
+Vg0=2;             % the bottom gate voltage
 Vg_step=5;
 Ng_step=0;
 
